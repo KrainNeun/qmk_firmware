@@ -13,6 +13,8 @@
 #undef LOCKING_RESYNC_ENABLE
 
 /* ポインティングデバイス */
+#define SPLIT_POINTING_ENABLE
+#define POINTING_DEVICE_RIGHT
 #define ADNS5050_SCLK_PIN         B2
 #define ADNS5050_SDIO_PIN         B6
 #define ADNS5050_CS_PIN           B5
@@ -20,8 +22,8 @@
 /* RGB */
 #define WS2812_DI_PIN D3
 #ifdef RGB_MATRIX_ENABLE
-#   define RGB_MATRIX_LED_COUNT 49
-#   define RGB_MATRIX_SPLIT { 26, 23 }
+#   define RGB_MATRIX_LED_COUNT 52
+#   define RGB_MATRIX_SPLIT { 27, 25 }
 #   define SPLIT_TRANSPORT_MIRROR
 #   define RGB_MATRIX_MAXIMUM_BRIGHTNESS 128
 #   define RGB_DISABLE_WHEN_USB_SUSPENDED
