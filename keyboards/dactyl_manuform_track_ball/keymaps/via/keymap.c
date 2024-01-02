@@ -10,8 +10,15 @@ enum layers {
     _LAYER6 = 6,
 };
 
+#define BASE   MO(_BASE)
 #define LAYER1 MO(_LAYER1)
 #define LAYER2 MO(_LAYER2)
+#define LAYER3 MO(_LAYER3)
+#define LAYER4 MO(_LAYER4)
+#define LAYER5 MO(_LAYER5)
+#define LAYER6 MO(_LAYER6)
+#define HT_ESC MT(MOD_LCTL,KC_ESC)
+#define HT_QUOT MT(MOD_RCTL,KC_QUOT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base (qwerty)
@@ -33,21 +40,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                           +-------------+ +-------------+
      */
     [_BASE] = LAYOUT(
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
-        KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
+        HT_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, HT_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,               KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-                 LAYER1,  KC_BTN1, KC_BTN2,                                                                  LAYER2,
+                 KC_NO,   KC_BTN1, KC_BTN2,                                                                  LAYER6,
                                             KC_SPC,  KC_LCMD,            KC_BSPC, KC_ENT,
                                             KC_LSFT, LAYER1,             LAYER2, KC_BSPC,
-                                            KC_LCMD, KC_LALT,            KC_RALT, KC_LCMD
+                                            KC_LALT, KC_LCTL,            KC_RCTL, KC_RALT
     ),
 
     [_LAYER1] = LAYOUT(
-        _______, KC_1,    KC_2,    KC_3,     KC_4,   KC_5,               KC_6,    KC_7,     KC_8,    KC_9,     KC_0, _______,
-        _______, _______, _______, _______, _______, _______,             _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______,             _______, _______, _______, _______, _______, _______,
+         KC_GRV, KC_1,    KC_2,    KC_3,     KC_4,   KC_5,               KC_6,    KC_7,     KC_8,    KC_9,     KC_0, _______,
+        _______, _______, S(KC_LBRC), S(KC_RBRC), KC_LBRC, KC_RBRC,             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, _______, _______,
+        _______, _______, _______, _______, S(KC_9), S(KC_0),             KC_MINS, KC_EQL, _______, _______, _______, _______,
                  _______, _______, _______,                                                                   _______,
-                                            _______, _______,             _______, _______,
+                                            _______, _______,             KC_DEL, _______,
                                             _______, _______,             _______, _______,
                                             _______, _______,             _______, _______
     ),
@@ -93,7 +100,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_LAYER6] = LAYOUT(
-        _______, _______, _______, _______, _______, _______,             _______, _______, _______, _______, _______, _______,
+        TO(0), TO(1), TO(2), TO(3), TO(4), TO(5),             _______, _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______,             _______, _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______,             _______, _______, _______, _______, _______, _______,
                  _______, _______, _______,                                                                   _______,
@@ -108,9 +115,8 @@ void persistent_default_layer_set(uint16_t default_layer) {
     default_layer_set(default_layer);
 }
 
-
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    switch(get_highest_layer(layer_state|default_layer_state)) {
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
         case _LAYER1:
             rgb_matrix_sethsv_noeeprom(HSV_BLUE);
             break;
@@ -139,5 +145,5 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
             break;
     }
-    return false;
-}
+  return state;
+};
