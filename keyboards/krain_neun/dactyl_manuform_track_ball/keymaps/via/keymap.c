@@ -19,6 +19,8 @@ enum layers {
 #define LAYER6 MO(_LAYER6)
 #define HT_ESC MT(MOD_LCTL,KC_ESC)
 #define HT_QUOT MT(MOD_RCTL,KC_QUOT)
+#define ST_LBRC S(KC_LBRC)
+#define ST_RBRC S(KC_RBRC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base (qwerty)
