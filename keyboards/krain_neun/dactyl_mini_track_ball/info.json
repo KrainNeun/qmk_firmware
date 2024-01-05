@@ -9,14 +9,13 @@
         "rows": ["D4", "C6", "D7", "E6"]
     },
     "processor": "atmega32u4",
-    "url": "",
     "usb": {
         "device_version": "1.0.0",
         "pid": "0x4402",
         "vid": "0x4B52"
     },
     "layouts": {
-        "LAYOUT_ortho_4x4": {
+        "LAYOUT": {
             "layout": [
                 {"matrix": [0, 0], "x": 0, "y": 0},
                 {"matrix": [0, 1], "x": 1, "y": 0},
