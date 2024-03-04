@@ -4,16 +4,17 @@
     /* Layout
      *         0     16     32     48     64     80     96              128    144    160    176    192    208    224    
      *     +----------------------------------+                                     +----------------------------------+
-     *   0 |  15  |  16  |  17  |  18  |  19  |                                     |  39  |  38  |  37  |  36  |  35  |
-     *     |------+------+------+------+------|                                     |------+------+------+------+------|
-     *  16 |  14  |  13  |  12  |  11  |  10  |                                     |  30  |  31  |  32  |  33  |  34  |
-     *     |------+------+------+------+------|                                     |------+------+------+------+------|
-     *  32 |   5  |   6  |   7  |   8  |   9  |                                     |  29  |  28  |  27  |  26  |  25  |
+     *   0 |  15  |  16  |  17  |  18  |  19  |                                     |  41  |  40  |  39  |  38  |  37  |
      *     +----------------------------------+                                     +----------------------------------+
-     *                                 +--------------------+         +--------------------+
-     *  48                             |   0  |   1  |   2  |         |  22  |  21  |  20  |
-     *                                 +------+------+------|         |------+------+------|
-     *  64                                    |   4  |   3  |         |  23  |  24  |
+     *  16 |  14  |  13  |  12  |  11  |  10  |                                     |  32  |  33  |  34  |  35  |  36  |
+     *     +----------------------------------+                                     +----------------------------------+
+     *  32 |   5  |   6  |   7  |   8  |   9  |                                     |  31  |  30  |  29  |  28  |  27  |
+     *     +----------------------------------+                                     +----------------------------------+
+     *  48        |  20  |  21  |                                                                 |  42  |  43  | 
+     *            +-------------+      +--------------------+         +--------------------+      +-------------|
+     *  48                             |   0  |   1  |   2  |         |  24  |  23  |  22  |
+     *                                 +--------------------|         |--------------------+
+     *  64                                    |   4  |   3  |         |  25  |  26  |
      *                                        +-------------+         +-------------+
      */
 led_config_t g_led_config = {
@@ -24,11 +25,13 @@ led_config_t g_led_config = {
         {       14,     13,     12,     11,     10},
         {        5,      6,      7,      8,      9},
         {        4,      3,      0,      1,      2},
-        // Righ
-        {       39,     38,     37,     36,     35},
-        {       30,     31,     32,     33,     34},
-        {       29,     28,     27,     26,     25},
-        {       22,     21,     20,     23,     24},
+        {   NO_LED,     20,      21, NO_LED, NO_LED},
+        // Right
+        {       41,     40,     39,     38,     37},
+        {       32,     33,     34,     35,     36},
+        {       31,     30,     29,     28,     27},
+        {       24,     23,     22,     25,     26},
+        {   NO_LED, NO_LED,     42, NO_LED,     43},
     }, 
     {
         // LED index to physical position.
@@ -43,17 +46,21 @@ led_config_t g_led_config = {
         {  64,  16 }, {  48,  16 }, {  32,  16 }, {  16,  16 }, {   0,  16 },
         // index: 15-19
         {   0,   0 }, {  16,   0 }, {  32,   0 }, {  48,   0 }, {  64,   0 },
+        // index: 20-21
+        {  16,  48 }, {  32,  48 },
         // Right
-        // index: 20-22
+        // index: 22-24
         { 160,  48 }, { 144,  48 }, { 128,  48 },
-        // index: 23-24
+        // index: 25-26
         { 128,  64 }, { 144,  64 },
-        // index: 25-29
+        // index: 27-31
         { 224,  32 }, { 208,  32 }, { 192,  32 }, { 176,  32 }, { 160,  32 },
-        // index: 30-34
+        // index: 32-36
         { 160,  16 }, { 176,  16 }, { 192,  16 }, { 208,  16 }, { 224,  16 },
-        // index: 35-39
+        // index: 37-41
         { 224,   0 }, { 208,   0 }, { 192,   0 }, { 176,   0 }, { 160,   0 },
+        // index: 42-43
+        { 192,  48 }, { 208,  48 },
     },
     {
         // Left
@@ -62,28 +69,14 @@ led_config_t g_led_config = {
         LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT,
         LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT,
         LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT,
+        LED_FLAG_MODIFIER, LED_FLAG_MODIFIER,
         // Right
         LED_FLAG_MODIFIER, LED_FLAG_MODIFIER, LED_FLAG_MODIFIER,
         LED_FLAG_MODIFIER, LED_FLAG_MODIFIER,
         LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT,
         LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT,
         LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT, LED_FLAG_KEYLIGHT,
+        LED_FLAG_MODIFIER, LED_FLAG_MODIFIER,
     }
 };
 #endif
-
-void pointing_device_init_kb(void) {
-    pointing_device_set_cpi(1250);
-}
-
-report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
-
-    double rad = 30 * (M_PI / 180) * -1;
-    int8_t x_rev =  + mouse_report.x * cos(rad) - mouse_report.y * sin(rad);
-    int8_t y_rev =  + mouse_report.x * sin(rad) + mouse_report.y * cos(rad);
-
-    mouse_report.x = x_rev;
-    mouse_report.y = y_rev;
-    
-    return pointing_device_task_user(mouse_report);
-}
