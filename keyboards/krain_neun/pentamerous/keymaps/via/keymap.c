@@ -118,7 +118,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 };
 
 void keyboard_post_init_user(void) {
-    pointing_device_set_cpi_on_side(true, 100); //Set cpi on left side to a low value for slower scrolling.
+    pointing_device_set_cpi_on_side(true, 1000); //Set cpi on left side to a low value for slower scrolling.
     pointing_device_set_cpi_on_side(false, 2500); //Set cpi on right side to a reasonable value for mousing.
 }
 
