@@ -117,14 +117,41 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   return state;
 };
 
+#define SCROLL_THRESHOLD 100
+int     cnt_mouse_y  = 0;
+int     cnt_mouse_x  = 0;
+int     scrolling_y  = 0;
+int     scrolling_x  = 0;
+
 void keyboard_post_init_user(void) {
-    pointing_device_set_cpi_on_side(true, 5); //Set cpi on left side to a low value for slower scrolling.
-    pointing_device_set_cpi_on_side(false, 2500); //Set cpi on right side to a reasonable value for mousing.
+    pointing_device_set_cpi_on_side(true, 1); //Set cpi on left side to a low value for slower scrolling.
+    pointing_device_set_cpi_on_side(false, 2000); //Set cpi on right side to a reasonable value for mousing.
 }
 
 report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
-    left_report.h = left_report.x;
-    left_report.v = left_report.y;
+    cnt_mouse_y += left_report.y;
+    cnt_mouse_x += left_report.x;
+    scrolling_y = 0;
+    scrolling_x = 0;
+
+    if (cnt_mouse_y > SCROLL_THRESHOLD) {
+        scrolling_y = 1;
+        cnt_mouse_y = 0;
+    } else if (cnt_mouse_y < SCROLL_THRESHOLD * (-1)) {
+        scrolling_y = -1;
+        cnt_mouse_y = 0;
+    }
+
+    if (cnt_mouse_x > SCROLL_THRESHOLD) {
+        scrolling_x = 1;
+        cnt_mouse_x = 0;
+    } else if (cnt_mouse_x < SCROLL_THRESHOLD * (-1)) {
+        scrolling_x = -1;
+        cnt_mouse_x = 0;
+    }
+
+    left_report.h = scrolling_x;
+    left_report.v = scrolling_y;
     left_report.x = 0;
     left_report.y = 0;
     return pointing_device_combine_reports(left_report, right_report);

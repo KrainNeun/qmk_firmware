@@ -16,6 +16,14 @@
      *  64                                           |   3  |         |  22  |
      *                                               -------+         +-------
      */
+     /*
+        0
+        16
+        32
+        48
+        56
+        64
+    */
 led_config_t g_led_config = {
     {
         // LED index to key matrix.
@@ -34,7 +42,7 @@ led_config_t g_led_config = {
         // LED index to physical position.
         // Left
         // index: 0-2
-        {  64,  48 }, {  80,  48 }, {  96,  48 },
+        {  64,  48 }, {  80,  56 }, {  96,  64 },
         // index: 3-4
         {  96,  64 }, 
         // index: 5-9
@@ -45,7 +53,7 @@ led_config_t g_led_config = {
         {   0,   0 }, {  16,   0 }, {  32,   0 }, {  48,   0 }, {  64,   0 },
         // Right
         // index: 22-24
-        { 160,  48 }, { 144,  48 }, { 128,  48 },
+        { 160,  48 }, { 144,  56 }, { 128,  64 },
         // index: 25-26
         { 128,  64 }, 
         // index: 27-31

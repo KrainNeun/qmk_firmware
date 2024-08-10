@@ -12,7 +12,7 @@
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
 
-# define TAPPING_TERM 180
+# define TAPPING_TERM 150
 # define TAPPING_TOGGLE 2
 
 /* ポインティングデバイス */
